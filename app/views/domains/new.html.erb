@@ -1,0 +1,7 @@
+<h1>Add domain</h1>
+<%= form_with model: @domain do |f| %>
+  <%= render "shared/errors", record: @domain %>
+  <p><%= f.label :name %><br><%= f.text_field :name %></p>
+  <p class="muted">The next free number is assigned automatically.</p>
+  <%= f.submit "Add domain" %>
+<% end %>

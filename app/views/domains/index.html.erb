@@ -1,0 +1,34 @@
+<h1>Control library</h1>
+<p class="muted">Numbers are permanent. Retired controls are hidden from new assessments and their numbers are never reused.</p>
+<% if Current.user.can_manage_library? %><p><%= link_to "Add domain", new_domain_path, class: "button" %></p><% end %>
+
+<% @domains.each do |domain| %>
+  <h2><%= domain.number %>. <%= domain.name %></h2>
+  <table>
+    <thead><tr><th>Ref</th><th>Control</th><th>OWASP</th><th>CWE / NIST</th><th>Severity</th><th></th></tr></thead>
+    <tbody>
+    <% domain.controls.each do |control| %>
+      <tr class="<%= 'retired' if control.retired? %>">
+        <td><%= control.ref %></td>
+        <td><%= control.description %></td>
+        <td><%= control.owasp %></td>
+        <td><%= control.cwe_nist %></td>
+        <td><%= control.default_severity.humanize %></td>
+        <td>
+          <% if Current.user.can_manage_library? %>
+            <%= link_to "Edit", edit_control_path(control) %>
+            <% if control.retired? %>
+              <%= button_to "Restore", restore_control_path(control), method: :patch, class: "link" %>
+            <% else %>
+              <%= button_to "Retire", retire_control_path(control), method: :patch, class: "link" %>
+            <% end %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+  <% if Current.user.can_manage_library? %>
+    <p><%= link_to "Add control to #{domain.name}", new_domain_control_path(domain) %></p>
+  <% end %>
+<% end %>
