@@ -1,0 +1,9 @@
+<% if authenticated? %>
+  <nav class="topbar">
+    <strong>Security Review</strong>
+    <%= link_to "Home", root_path %>
+    <span class="spacer"></span>
+    <span><%= Current.user.email_address %> (<%= Current.user.role.humanize %>)</span>
+    <%= button_to "Sign out", session_path, method: :delete, class: "link" %>
+  </nav>
+<% end %>
