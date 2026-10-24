@@ -1,0 +1,9 @@
+<%= form_with model: control, url: url do |f| %>
+  <%= render "shared/errors", record: control %>
+  <p><%= f.label :description %><br><%= f.text_area :description, rows: 3, cols: 70 %></p>
+  <p><%= f.label :owasp, "OWASP reference" %><br><%= f.text_field :owasp %></p>
+  <p><%= f.label :cwe_nist, "CWE / NIST reference" %><br><%= f.text_field :cwe_nist %></p>
+  <p><%= f.label :default_severity %><br>
+    <%= f.select :default_severity, Control.default_severities.keys.map { |s| [ s.humanize, s ] } %></p>
+  <%= f.submit %>
+<% end %>

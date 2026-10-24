@@ -51,3 +51,49 @@ button.link {
   cursor: pointer;
   text-decoration: underline;
 }
+
+a {
+  color: #1f4e9c;
+}
+
+.topbar a {
+  color: #fff;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 8px 0 16px;
+}
+
+th {
+  background: #1f3864;
+  color: #fff;
+  text-align: left;
+}
+
+th, td {
+  border: 1px solid #c8c8c8;
+  padding: 6px 8px;
+  vertical-align: top;
+}
+
+tr.retired td {
+  color: #888;
+  text-decoration: line-through;
+}
+
+.muted {
+  color: #666;
+}
+
+.button, input[type=submit] {
+  background: #1f3864;
+  color: #fff;
+  border: 0;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
