@@ -1,1 +1,53 @@
 // Sassy
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  margin: 0;
+  color: #1a1a1a;
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 20px 60px;
+}
+
+.topbar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  background: #1f3864;
+  color: #fff;
+  padding: 10px 20px;
+}
+
+.topbar a, .topbar .link {
+  color: #fff;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.flash {
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.flash.notice {
+  background: #e2f0d9;
+}
+
+.flash.alert {
+  background: #fde2e2;
+  color: #8a1c1c;
+}
+
+button.link {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
