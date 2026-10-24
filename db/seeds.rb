@@ -7,6 +7,10 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+# Control library from the department's sample baseline (idempotent).
+BaselineImporter.import_library!(Rails.root.join("db/seed_data/API_Baseline_Security_Report.csv"))
+
+# Development users, one per role. Password: password123
 if Rails.env.development?
   {
     "architect@example.com" => :architect, "developer@example.com" => :developer,
