@@ -1,6 +1,7 @@
 class ControlResult < ApplicationRecord
   belongs_to :assessment
   belongs_to :control
+  has_many :findings, dependent: :destroy
 
   enum :status, { pending: 0, passed: 1, failed: 2, partial: 3, not_applicable: 4 }, prefix: true, validate: true
   enum :severity, Control::SEVERITIES, prefix: true, validate: true
@@ -11,4 +12,5 @@ class ControlResult < ApplicationRecord
 
   # Failed and Partial are vulnerabilities and will need an evidence pack (step 07).
   def requires_evidence? = status_failed? || status_partial?
+  def evidence_complete? = findings.any? { |finding| finding.evidences.any? }
 end

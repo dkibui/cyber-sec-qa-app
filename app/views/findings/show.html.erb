@@ -1,0 +1,38 @@
+<p><%= link_to "Back to checklist", assessment_path(@assessment, anchor: dom_id(@finding.control_result)) %></p>
+<h1><%= @finding.category.presence || "Finding ##{@finding.id}" %></h1>
+<p>Control <strong><%= @finding.control_result.control.ref %></strong>:
+  <%= @finding.control_result.control.description %></p>
+
+<h3>Test objective</h3>
+<%= simple_format @finding.test_objective %>
+<h3>Observations</h3>
+<%= simple_format @finding.observations %>
+
+<h2>Evidence</h2>
+<% @evidences.each_with_index do |evidence, index| %>
+  <figure>
+    <% if evidence.file.image? %>
+      <%= image_tag url_for(evidence.file), class: "evidence-img", alt: evidence.caption %>
+    <% else %>
+      <%= link_to evidence.file.filename, rails_blob_path(evidence.file, disposition: "attachment") %>
+    <% end %>
+    <figcaption>Figure <%= index + 1 %>: <%= evidence.caption %>
+      <% if @assessment.editable? && Current.user.can_test? %>
+        <%= button_to "Remove", finding_evidence_path(@finding, evidence), method: :delete, class: "link" %>
+      <% end %>
+    </figcaption>
+  </figure>
+<% end %>
+<%= tag.p "No evidence yet.", class: "muted" if @evidences.empty? %>
+
+<% if @assessment.editable? && Current.user.can_test? %>
+  <%= form_with model: [@finding, Evidence.new] do |f| %>
+    <p><%= f.label :file, "Screenshot or PDF (up to 10 MB)" %><br>
+      <%= f.file_field :file, accept: "image/*,application/pdf" %></p>
+    <p><%= f.label :caption %><br><%= f.text_field :caption, size: 60 %></p>
+    <%= f.submit "Add evidence" %>
+  <% end %>
+  <p><%= link_to "Edit finding", edit_finding_path(@finding) %></p>
+  <%= button_to "Delete finding", finding_path(@finding), method: :delete, class: "link",
+                form: { data: { turbo_confirm: "Delete this finding and its evidence?" } } %>
+<% end %>

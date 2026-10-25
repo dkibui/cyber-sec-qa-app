@@ -329,3 +329,36 @@ button.link, .link {
   color: var(--orange);
   font-weight: 600;
 }
+
+/* Evidence */
+.evidence {
+  margin-top: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  background: rgba(20, 26, 33, 0.05);
+}
+
+.evidence.missing {
+  color: var(--orange);
+  font-weight: 600;
+}
+
+.evidence.ok {
+  color: var(--black);
+}
+
+.evidence-img {
+  max-width: 640px;
+  width: 100%;
+  border-radius: 6px;
+}
+
+figure {
+  margin: 14px 0;
+}
+
+figcaption {
+  margin-top: 6px;
+  color: var(--soft);
+}

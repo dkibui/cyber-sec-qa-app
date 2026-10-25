@@ -1,0 +1,14 @@
+<%= form_with model: finding, url: url do |f| %>
+  <%= render "shared/errors", record: finding %>
+  <% if finding.new_record? %>
+    <p><%= f.label :control_result_id, "Control" %><br>
+      <%= f.select :control_result_id,
+                   assessment.control_results.requiring_evidence.includes(control: :domain)
+                             .sort_by { |r| [r.control.domain.number, r.control.sequence] }
+                             .map { |r| ["#{r.control.ref} #{r.control.description.truncate(70)}", r.id] } %></p>
+  <% end %>
+  <p><%= f.label :category %><br><%= f.text_field :category, size: 60 %></p>
+  <p><%= f.label :test_objective %><br><%= f.text_area :test_objective, rows: 3, cols: 70 %></p>
+  <p><%= f.label :observations %><br><%= f.text_area :observations, rows: 5, cols: 70 %></p>
+  <%= f.submit %>
+<% end %>

@@ -1,0 +1,3 @@
+<h1>New finding</h1>
+<p><%= link_to "Back to checklist", @assessment %></p>
+<%= render "form", finding: @finding, assessment: @assessment, url: assessment_findings_path(@assessment) %>
