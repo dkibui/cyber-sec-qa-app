@@ -2,6 +2,7 @@ class Control < ApplicationRecord
   SEVERITIES = { critical: 0, high: 1, medium: 2, low: 3 }.freeze
 
   belongs_to :domain
+  has_many :control_results, dependent: :restrict_with_error
 
   enum :default_severity, SEVERITIES, prefix: :default
 

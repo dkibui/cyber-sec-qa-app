@@ -10,9 +10,38 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_25_001632) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_25_014546) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "assessments", force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.integer "gate", null: false
+    t.integer "round", default: 1, null: false
+    t.bigint "tester_id"
+    t.text "components_in_scope"
+    t.integer "outcome", default: 0, null: false
+    t.datetime "decided_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id", "gate", "round"], name: "index_assessments_on_project_id_and_gate_and_round", unique: true
+    t.index ["project_id"], name: "index_assessments_on_project_id"
+    t.index ["tester_id"], name: "index_assessments_on_tester_id"
+  end
+
+  create_table "control_results", force: :cascade do |t|
+    t.bigint "assessment_id", null: false
+    t.bigint "control_id", null: false
+    t.integer "status", default: 0, null: false
+    t.integer "severity", default: 1, null: false
+    t.text "comments"
+    t.string "owner"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assessment_id", "control_id"], name: "index_control_results_on_assessment_id_and_control_id", unique: true
+    t.index ["assessment_id"], name: "index_control_results_on_assessment_id"
+    t.index ["control_id"], name: "index_control_results_on_control_id"
+  end
 
   create_table "controls", force: :cascade do |t|
     t.bigint "domain_id", null: false
@@ -67,6 +96,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_001632) do
     t.index ["role"], name: "index_users_on_role"
   end
 
+  add_foreign_key "assessments", "projects"
+  add_foreign_key "assessments", "users", column: "tester_id"
+  add_foreign_key "control_results", "assessments"
+  add_foreign_key "control_results", "controls"
   add_foreign_key "controls", "domains"
   add_foreign_key "projects", "users", column: "architect_id"
   add_foreign_key "projects", "users", column: "developer_id"
