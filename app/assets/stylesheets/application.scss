@@ -89,6 +89,38 @@ main {
   margin: 24px 0 8px;
 }
 
+/* Form controls */
+input[type=text], input[type=email], input[type=password], input[type=number], select, textarea {
+  font: inherit;
+  color: var(--black);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 6px 8px;
+  box-sizing: border-box;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: 2px solid var(--orange);
+  outline-offset: 1px;
+  border-color: var(--orange);
+}
+
+.result-form select, .result-form input[type=text] {
+  width: 100%;
+}
+
+.select-failed, .select-partial {
+  border-color: var(--orange);
+  color: var(--orange);
+  font-weight: 600;
+}
+
+.select-passed {
+  border-color: var(--black);
+  font-weight: 600;
+}
+
 /* Tables */
 /* Tables: borderless rows with a light tint that darkens on hover */
 table {
@@ -234,19 +266,19 @@ button.link, .link {
 }
 
 .result-form .col-status {
-  width: 112px;
+  width: 140px;
 }
 
 .result-form .col-sev {
-  width: 72px;
+  width: 96px;
 }
 
 .result-form .col-comments {
-  flex: 0 1 200px;
+  flex: 1 1 200px;
 }
 
 .result-form .col-owner {
-  width: 90px;
+  width: 110px;
 }
 
 .pill {

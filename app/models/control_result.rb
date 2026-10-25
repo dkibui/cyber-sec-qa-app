@@ -2,8 +2,8 @@ class ControlResult < ApplicationRecord
   belongs_to :assessment
   belongs_to :control
 
-  enum :status, { pending: 0, passed: 1, failed: 2, partial: 3, not_applicable: 4 }, prefix: true
-  enum :severity, Control::SEVERITIES, prefix: true
+  enum :status, { pending: 0, passed: 1, failed: 2, partial: 3, not_applicable: 4 }, prefix: true, validate: true
+  enum :severity, Control::SEVERITIES, prefix: true, validate: true
 
   validates :control_id, uniqueness: { scope: :assessment_id }
 
