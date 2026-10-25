@@ -1,5 +1,38 @@
 <h1><%= @project.name %></h1>
-<p>Stage: <span class="badge stage-<%= @project.stage %>"><%= @project.stage.humanize %></span></p>
+<p>Stage: <span class="badge stage-<%= @project.stage %>"><%= @project.stage.humanize %></span>
+  <% if @project.live? %> &mdash; live
+  <% end %></p>
 <p class="muted">Flow: Design &rarr; Design review &rarr; Development &rarr; Security testing &rarr; Live</p>
 <p>Architect: <%= @project.architect&.email_address || "unassigned" %> &middot;
   Developer: <%= @project.developer&.email_address || "unassigned" %></p>
+
+<% if Current.user.can_submit?(@project) %>
+  <%= button_to(@project.design? ? "Submit design for security check" : "Submit build for security check",
+                submit_project_path(@project), class: "button") %>
+<% end %>
+
+<h2>Security checks</h2>
+<table>
+  <thead>
+  <tr>
+    <th>Gate</th>
+    <th>Round</th>
+    <th>Outcome</th>
+    <th>Tester</th>
+    <th>Decided</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @assessments.each do |assessment| %>
+    <tr>
+      <td><%= link_to assessment.gate.humanize, assessment %></td>
+      <td><%= assessment.round %></td>
+      <td><span class="badge outcome-<%= assessment.outcome %>"><%= assessment.outcome.humanize %></span>
+        <%= "to #{assessment.returned_to.downcase}" if assessment.outcome_returned? %></td>
+      <td><%= assessment.tester&.email_address %></td>
+      <td><%= l(assessment.decided_at, format: :short) if assessment.decided_at %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+<%= tag.p "No security check yet.", class: "muted" if @assessments.empty? %>

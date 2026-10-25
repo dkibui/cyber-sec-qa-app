@@ -5,6 +5,7 @@ class ProjectsController < ApplicationController
 
   def show
     @project = Project.find(params[:id])
+    @assessments = @project.assessments.includes(:tester).order(:created_at)
   end
 
   def new
@@ -20,5 +21,14 @@ class ProjectsController < ApplicationController
     else
       render :new, status: :unprocessable_entity
     end
+  end
+
+  def submit
+    @project = Project.find(params[:id])
+    require_permission! Current.user.can_submit?(@project)
+    assessment = @project.submit!
+    redirect_to assessment, notice: "Submitted. A security check has started."
+  rescue Project::InvalidTransition => e
+    redirect_to @project, alert: e.message
   end
 end

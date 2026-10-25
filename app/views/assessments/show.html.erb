@@ -1,0 +1,15 @@
+<h1><%= link_to @assessment.project.name, @assessment.project %>:
+  <%= @assessment.gate.humanize %> check, round <%= @assessment.round %></h1>
+<p>Outcome: <span class="badge outcome-<%= @assessment.outcome %>"><%= @assessment.outcome.humanize %></span>
+  <%= "(returned to #{@assessment.returned_to.downcase})" if @assessment.outcome_returned? %>
+  &middot; Tester: <%= @assessment.tester&.email_address || "unassigned" %>
+  <% if @assessment.components_in_scope.present? %>&middot; Scope: <%= @assessment.components_in_scope %>
+  <% end %></p>
+
+<h2>Baseline checklist</h2>
+<% @results.each do |domain, results| %>
+  <h3><%= domain.number %>. <%= domain.name %></h3>
+  <% results.each do |result| %>
+    <%= render "result", result: result %>
+  <% end %>
+<% end %>

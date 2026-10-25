@@ -1,0 +1,9 @@
+<div class="result status-<%= result.status %>" id="<%= dom_id(result) %>">
+  <div class="result-form">
+    <span class="ref"><%= result.control.ref %></span>
+    <span class="desc"><%= result.control.description %>
+      <small>(<%= [result.control.owasp, result.control.cwe_nist].compact_blank.join(" · ") %>)</small></span>
+    <span><%= result.status.humanize %></span><span><%= result.severity.humanize %></span>
+    <span><%= result.comments %></span><span><%= result.owner %></span>
+  </div>
+</div>
