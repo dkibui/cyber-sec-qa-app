@@ -1,11 +1,29 @@
+<% editable = @assessment.editable? && Current.user.can_test? %>
 <div class="result" id="<%= dom_id(result) %>">
-  <div class="result-form">
-    <span class="ref"><%= result.control.ref %></span>
-    <span class="desc"><%= result.control.description %>
-      <small class="muted">(<%= [result.control.owasp, result.control.cwe_nist].compact_blank.join(" · ") %>)</small></span>
-    <span class="col-status"><span class="pill pill-<%= result.status %>"><%= result.status.humanize %></span></span>
-    <span class="col-sev sev sev-<%= result.severity %>"><%= result.severity.humanize %></span>
-    <span class="col-comments"><%= result.comments %></span>
-    <span class="col-owner"><%= result.owner %></span>
-  </div>
+  <% if editable %>
+    <%= form_with model: result, url: control_result_path(result), class: "result-form" do |f| %>
+      <span class="ref"><%= result.control.ref %></span>
+      <span class="desc"><%= result.control.description %>
+        <small class="muted">(<%= [result.control.owasp, result.control.cwe_nist].compact_blank.join(" · ") %>)</small></span>
+      <span class="col-status">
+        <%= f.select :status, ControlResult.statuses.keys.map { |s| [s.humanize, s] }, {}, class: "select-#{result.status}" %>
+      </span>
+      <span class="col-sev">
+        <%= f.select :severity, ControlResult.severities.keys.map { |s| [s.humanize, s] } %>
+      </span>
+      <span class="col-comments"><%= f.text_field :comments, placeholder: "Comments" %></span>
+      <span class="col-owner"><%= f.text_field :owner, placeholder: "Owner" %></span>
+      <%= f.submit "Save" %>
+    <% end %>
+  <% else %>
+    <div class="result-form">
+      <span class="ref"><%= result.control.ref %></span>
+      <span class="desc"><%= result.control.description %>
+        <small class="muted">(<%= [result.control.owasp, result.control.cwe_nist].compact_blank.join(" · ") %>)</small></span>
+      <span class="col-status"><span class="pill pill-<%= result.status %>"><%= result.status.humanize %></span></span>
+      <span class="col-sev sev sev-<%= result.severity %>"><%= result.severity.humanize %></span>
+      <span class="col-comments"><%= result.comments %></span>
+      <span class="col-owner"><%= result.owner %></span>
+    </div>
+  <% end %>
 </div>
