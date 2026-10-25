@@ -1,0 +1,16 @@
+<h1>Projects</h1>
+<% if Current.user.can_create_project? %><p><%= link_to "New project", new_project_path, class: "button" %></p><% end %>
+<table>
+  <thead><tr><th>Project</th><th>Stage</th><th>Architect</th><th>Developer</th></tr></thead>
+  <tbody>
+  <% @projects.each do |project| %>
+    <tr>
+      <td><%= link_to project.name, project %></td>
+      <td><span class="badge stage-<%= project.stage %>"><%= project.stage.humanize %></span></td>
+      <td><%= project.architect&.email_address %></td>
+      <td><%= project.developer&.email_address %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+<%= tag.p "No projects yet.", class: "muted" if @projects.empty? %>

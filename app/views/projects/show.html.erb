@@ -1,0 +1,5 @@
+<h1><%= @project.name %></h1>
+<p>Stage: <span class="badge stage-<%= @project.stage %>"><%= @project.stage.humanize %></span></p>
+<p class="muted">Flow: Design &rarr; Design review &rarr; Development &rarr; Security testing &rarr; Live</p>
+<p>Architect: <%= @project.architect&.email_address || "unassigned" %> &middot;
+  Developer: <%= @project.developer&.email_address || "unassigned" %></p>

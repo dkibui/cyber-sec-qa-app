@@ -1,0 +1,10 @@
+<h1>New project</h1>
+<%= form_with model: @project do |f| %>
+  <%= render "shared/errors", record: @project %>
+  <p><%= f.label :name %><br><%= f.text_field :name %></p>
+  <p><%= f.label :architect_id, "Solutions architect" %><br>
+    <%= f.collection_select :architect_id, User.architect, :id, :email_address, include_blank: true %></p>
+  <p><%= f.label :developer_id, "Developer" %><br>
+    <%= f.collection_select :developer_id, User.developer, :id, :email_address, include_blank: true %></p>
+  <%= f.submit "Create project" %>
+<% end %>
