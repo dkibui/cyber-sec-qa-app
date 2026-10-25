@@ -2,6 +2,7 @@ class Assessment < ApplicationRecord
   belongs_to :project
   belongs_to :tester, class_name: "User", optional: true
   has_many :control_results, dependent: :destroy
+  has_many :findings, dependent: :destroy
 
   enum :gate, { design: 0, testing: 1 }, prefix: true
   enum :outcome, { in_progress: 0, forwarded: 1, returned: 2 }, prefix: true
@@ -15,6 +16,14 @@ class Assessment < ApplicationRecord
   def returned_to = gate_design? ? "Solutions architect" : "Developers"
 
   def pending_count = control_results.status_pending.count
+
+  def open_critical_count = control_results.requiring_evidence.severity_critical.count
+
+  def missing_evidence
+    control_results.requiring_evidence.includes(findings: :evidences).reject(&:evidence_complete?)
+  end
+
+  def ready_for_decision? = pending_count.zero? && missing_evidence.empty?
 
   private
 

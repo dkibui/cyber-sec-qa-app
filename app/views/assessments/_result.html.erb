@@ -26,4 +26,15 @@
       <span class="col-owner"><%= result.owner %></span>
     </div>
   <% end %>
+  <% if result.requires_evidence? %>
+    <div class="evidence <%= result.evidence_complete? ? 'ok' : 'missing' %>">
+      <%= result.evidence_complete? ? "Evidence complete" : "MISSING EVIDENCE" %>:
+      <% result.findings.each do |finding| %>
+        <%= link_to(finding.category.presence || "Finding ##{finding.id}", finding) %>
+        (<%= finding.evidences.size %>)
+      <% end %>
+      <% if editable %><%= link_to "Add finding", new_assessment_finding_path(@assessment, control_result_id: result.id) %>
+      <% end %>
+    </div>
+  <% end %>
 </div>

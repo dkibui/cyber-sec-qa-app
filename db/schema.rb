@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_25_093239) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_25_093319) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -94,6 +94,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_093239) do
     t.index ["number"], name: "index_domains_on_number", unique: true
   end
 
+  create_table "evidences", force: :cascade do |t|
+    t.bigint "finding_id", null: false
+    t.string "caption", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["finding_id"], name: "index_evidences_on_finding_id"
+  end
+
+  create_table "findings", force: :cascade do |t|
+    t.bigint "assessment_id", null: false
+    t.bigint "control_result_id", null: false
+    t.string "category"
+    t.text "test_objective"
+    t.text "observations"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assessment_id"], name: "index_findings_on_assessment_id"
+    t.index ["control_result_id"], name: "index_findings_on_control_result_id"
+  end
+
   create_table "projects", force: :cascade do |t|
     t.string "name", null: false
     t.integer "stage", default: 0, null: false
@@ -131,6 +151,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_093239) do
   add_foreign_key "control_results", "assessments"
   add_foreign_key "control_results", "controls"
   add_foreign_key "controls", "domains"
+  add_foreign_key "evidences", "findings"
+  add_foreign_key "findings", "assessments"
+  add_foreign_key "findings", "control_results"
   add_foreign_key "projects", "users", column: "architect_id"
   add_foreign_key "projects", "users", column: "developer_id"
   add_foreign_key "sessions", "users"
