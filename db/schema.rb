@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_24_160234) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_25_001632) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -37,6 +37,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_24_160234) do
     t.index ["number"], name: "index_domains_on_number", unique: true
   end
 
+  create_table "projects", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "stage", default: 0, null: false
+    t.bigint "architect_id"
+    t.bigint "developer_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["architect_id"], name: "index_projects_on_architect_id"
+    t.index ["developer_id"], name: "index_projects_on_developer_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "ip_address"
@@ -57,5 +68,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_24_160234) do
   end
 
   add_foreign_key "controls", "domains"
+  add_foreign_key "projects", "users", column: "architect_id"
+  add_foreign_key "projects", "users", column: "developer_id"
   add_foreign_key "sessions", "users"
 end

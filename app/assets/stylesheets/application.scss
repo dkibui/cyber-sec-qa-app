@@ -97,3 +97,18 @@ tr.retired td {
   text-decoration: none;
   display: inline-block;
 }
+
+.badge {
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #e7e7e7;
+  font-size: 12px;
+}
+
+.stage-design_review, .stage-security_testing {
+  background: #ffeb9c;
+}
+
+.stage-live {
+  background: #c6efce;
+}
