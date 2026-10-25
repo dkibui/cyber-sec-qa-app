@@ -1,9 +1,8 @@
 <% if authenticated? %>
   <nav class="topbar">
-    <strong class="brand">LOOP</strong>
+    <%= link_to image_tag("loop_logo.svg", alt: "LOOP", class: "logo"), root_path, class: "brand-link" %>
     <% if authenticated? %>
       <nav class="topbar">
-        <strong>Security Review</strong>
         <%= link_to "Projects", root_path %>
         <%= link_to "Control library", domains_path %>
         <span class="spacer"></span>

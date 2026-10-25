@@ -1,9 +1,11 @@
-<div class="result status-<%= result.status %>" id="<%= dom_id(result) %>">
+<div class="result" id="<%= dom_id(result) %>">
   <div class="result-form">
     <span class="ref"><%= result.control.ref %></span>
     <span class="desc"><%= result.control.description %>
-      <small>(<%= [result.control.owasp, result.control.cwe_nist].compact_blank.join(" · ") %>)</small></span>
-    <span><%= result.status.humanize %></span><span><%= result.severity.humanize %></span>
-    <span><%= result.comments %></span><span><%= result.owner %></span>
+      <small class="muted">(<%= [result.control.owasp, result.control.cwe_nist].compact_blank.join(" · ") %>)</small></span>
+    <span class="col-status"><span class="pill pill-<%= result.status %>"><%= result.status.humanize %></span></span>
+    <span class="col-sev sev sev-<%= result.severity %>"><%= result.severity.humanize %></span>
+    <span class="col-comments"><%= result.comments %></span>
+    <span class="col-owner"><%= result.owner %></span>
   </div>
 </div>
