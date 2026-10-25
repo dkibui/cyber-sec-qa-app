@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_25_093319) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_25_135029) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -114,6 +114,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_093319) do
     t.index ["control_result_id"], name: "index_findings_on_control_result_id"
   end
 
+  create_table "overrides", force: :cascade do |t|
+    t.bigint "assessment_id", null: false
+    t.bigint "approver_id", null: false
+    t.text "comments", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["approver_id"], name: "index_overrides_on_approver_id"
+    t.index ["assessment_id"], name: "index_overrides_on_assessment_id", unique: true
+  end
+
   create_table "projects", force: :cascade do |t|
     t.string "name", null: false
     t.integer "stage", default: 0, null: false
@@ -154,6 +164,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_093319) do
   add_foreign_key "evidences", "findings"
   add_foreign_key "findings", "assessments"
   add_foreign_key "findings", "control_results"
+  add_foreign_key "overrides", "assessments"
+  add_foreign_key "overrides", "users", column: "approver_id"
   add_foreign_key "projects", "users", column: "architect_id"
   add_foreign_key "projects", "users", column: "developer_id"
   add_foreign_key "sessions", "users"

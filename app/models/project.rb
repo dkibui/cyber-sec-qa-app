@@ -2,7 +2,9 @@ class Project < ApplicationRecord
   class InvalidTransition < StandardError; end
 
   # design -> design_review -> development -> security_testing -> live
-  SUBMIT = { "design" => [ "design_review", :design ], "development" => [ "security_testing", :testing ] }.freeze
+  SUBMIT    = { "design" => [ "design_review", :design ], "development" => [ "security_testing", :testing ] }.freeze
+  ADVANCE   = { "design_review" => "development", "security_testing" => "live" }.freeze
+  SEND_BACK = { "design_review" => "design", "security_testing" => "development" }.freeze
 
   belongs_to :architect, class_name: "User", optional: true
   belongs_to :developer, class_name: "User", optional: true
@@ -28,5 +30,13 @@ class Project < ApplicationRecord
         components_in_scope: previous&.components_in_scope
       )
     end
+  end
+
+  def advance!
+    update!(stage: ADVANCE.fetch(stage) { raise InvalidTransition, "A project in #{stage.humanize} is not under review." })
+  end
+
+  def send_back!
+    update!(stage: SEND_BACK.fetch(stage) { raise InvalidTransition, "A project in #{stage.humanize} is not under review." })
   end
 end

@@ -12,8 +12,24 @@
   <li>Failed or Partial controls missing evidence:
     <strong><%= @missing.size %></strong>
     <%= "(#{@missing.map { |r| r.control.ref }.join(', ')})" if @missing.any? %></li>
-  <li>Open Critical failures: <strong><%= @open_criticals %></strong></li>
+  <li>Open Critical failures: <strong><%= @open_criticals %></strong>
+    <% if @assessment.override %>
+      &mdash; head override on record by <%= @assessment.override.approver.email_address %>:
+      <em><%= @assessment.override.comments %></em>
+    <% elsif @open_criticals.positive? && @assessment.editable? && Current.user.can_approve_override? %>
+      &mdash; <%= link_to "Record department head override", new_assessment_override_path(@assessment) %>
+    <% end %></li>
 </ul>
+
+<% if @assessment.editable? && Current.user.can_test? %>
+  <div class="decision">
+    <%= button_to @assessment.gate_design? ? "Forward to development" : "Forward: go live",
+                  assessment_decision_path(@assessment, outcome: "forward"), class: "button" %>
+    <%= button_to "Return to #{@assessment.returned_to.downcase}",
+                  assessment_decision_path(@assessment, outcome: "return"), class: "button danger",
+                  form: { data: { turbo_confirm: "Return this project?" } } %>
+  </div>
+<% end %>
 
 <h2>Baseline checklist</h2>
 <% @results.each do |domain, results| %>

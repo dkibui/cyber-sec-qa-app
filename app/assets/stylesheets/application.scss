@@ -362,3 +362,13 @@ figcaption {
   margin-top: 6px;
   color: var(--soft);
 }
+
+.decision {
+  display: flex;
+  gap: 12px;
+  margin: 14px 0;
+}
+
+.decision form {
+  margin: 0;
+}

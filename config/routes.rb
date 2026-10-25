@@ -15,6 +15,8 @@ Rails.application.routes.draw do
     post :submit, on: :member
   end
   resources :assessments, only: :show do
+    resource :decision, only: :create
+    resource :override, only: %i[new create]
     resources :findings, only: %i[new create]
   end
 

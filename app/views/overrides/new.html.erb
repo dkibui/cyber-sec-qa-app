@@ -1,0 +1,9 @@
+<h1>Department head override</h1>
+<p>Allows this project to go forward with open Critical failures. Your name and the reason are kept on record.</p>
+<%= form_with model: @override, url: assessment_override_path(@assessment) do |f| %>
+  <%= render "shared/errors", record: @override %>
+  <p><%= f.label :comments, "Comments (why this is allowed, and the patch timeline)" %><br>
+    <%= f.text_area :comments, rows: 5, cols: 70 %></p>
+  <%= f.submit "Record override" %>
+<% end %>
+<p><%= link_to "Cancel", @assessment %></p>
