@@ -38,7 +38,7 @@ class Assessment < ApplicationRecord
     raise NotReady, "Evidence is missing for: #{missing.map { |r| r.control.ref }.join(', ')}." if missing.any?
 
     if open_critical_count.positive? && !override_on_record?
-      raise NotReady, "Open Critical failures need a department head override with comments."
+      raise NotReady, "Open Critical failures need a recorded override with comments."
     end
 
     transaction do

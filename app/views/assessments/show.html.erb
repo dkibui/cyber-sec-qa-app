@@ -14,10 +14,10 @@
     <%= "(#{@missing.map { |r| r.control.ref }.join(', ')})" if @missing.any? %></li>
   <li>Open Critical failures: <strong><%= @open_criticals %></strong>
     <% if @assessment.override %>
-      &mdash; head override on record by <%= @assessment.override.approver.email_address %>:
+      &mdash; override on record, recorded byy <%= @assessment.override.approver.email_address %>:
       <em><%= @assessment.override.comments %></em>
     <% elsif @open_criticals.positive? && @assessment.editable? && Current.user.can_approve_override? %>
-      &mdash; <%= link_to "Record department head override", new_assessment_override_path(@assessment) %>
+      &mdash; <%= link_to "Record override", new_assessment_override_path(@assessment) %>
     <% end %></li>
 </ul>
 

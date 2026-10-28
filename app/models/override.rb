@@ -1,4 +1,4 @@
-# A department head's recorded exception allowing a forward with open Critical failures.
+# A security tester's recorded exception allowing a forward with open Critical failures.
 class Override < ApplicationRecord
   belongs_to :assessment
   belongs_to :approver, class_name: "User"
