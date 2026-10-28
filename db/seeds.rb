@@ -9,8 +9,9 @@
 #   end
 if Rails.env.development?
   {
+    "admin@example.com" => :admin,
     "architect@example.com" => :architect, "developer@example.com" => :developer,
-    "tester@example.com" => :security_tester, "head@example.com" => :department_head,
+    "tester@example.com" => :security_tester,
     "reviewer@example.com" => :reviewer
   }.each do |email, role|
     User.find_or_create_by!(email_address: email) { |u| u.password = "password123"; u.role = role }

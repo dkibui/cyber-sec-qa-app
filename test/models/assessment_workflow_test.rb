@@ -9,7 +9,7 @@ class AssessmentWorkflowTest < ActiveSupport::TestCase
     @critical = @domain.controls.create!(description: "Every request is authenticated", default_severity: :critical)
     @high = @domain.controls.create!(description: "MFA where risk warrants it", default_severity: :high)
     @project = Project.create!(name: "Demo")
-    @head = User.create!(email_address: "head-test@example.com", password: "password123", role: :department_head)
+    @tester = User.create!(email_address: "tester-test@example.com", password: "password123", role: :security_tester)
   end
 
   test "cannot forward while a control is pending" do
@@ -40,7 +40,7 @@ class AssessmentWorkflowTest < ActiveSupport::TestCase
     assert @project.reload.live?
   end
 
-  test "an open critical failure needs a department head override with comments" do
+  test "an open critical failure needs a tester override with comments" do
     assessment = @project.submit!
     results = assessment.control_results.index_by(&:control_id)
     results[@critical.id].update!(status: :failed)
@@ -50,16 +50,16 @@ class AssessmentWorkflowTest < ActiveSupport::TestCase
     error = assert_raises(Assessment::NotReady) { assessment.forward! }
     assert_match(/Critical/, error.message)
 
-    assert_not Override.new(assessment: assessment, approver: @head, comments: "").valid?
-    Override.create!(assessment: assessment, approver: @head, comments: "Patch scheduled for Friday")
+    assert_not Override.new(assessment: assessment, approver: @tester, comments: "").valid?
+    Override.create!(assessment: assessment, approver: @tester, comments: "Patch scheduled for Friday")
     assessment.reload.forward!
     assert @project.reload.development?
   end
 
-  test "only a department head can record an override" do
+  test "only a tester can record an override" do
     assessment = @project.submit!
-    tester = User.create!(email_address: "tester-test@example.com", password: "password123", role: :security_tester)
-    assert_not Override.new(assessment: assessment, approver: tester, comments: "ok").valid?
+    admin = User.create!(email_address: "admin-test@example.com", password: "password123", role: :admin)
+    assert_not Override.new(assessment: assessment, approver: admin, comments: "ok").valid?
   end
 
   test "returning sends the project back and the next submission is round 2" do
