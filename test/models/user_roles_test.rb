@@ -17,15 +17,20 @@ class UserRolesTest < ActiveSupport::TestCase
     assert_not build_user(:developer).can_test?
   end
 
-  test "only a department head approves overrides" do
-    assert build_user(:department_head).can_approve_override?
-    assert_not build_user(:security_tester).can_approve_override?
+  test "only a security tester records overrides" do
+    assert build_user(:security_tester).can_approve_override?
+    assert_not build_user(:admin).can_approve_override?
   end
 
-  test "library management belongs to testers and the department head" do
-    assert build_user(:security_tester).can_manage_library?
-    assert build_user(:department_head).can_manage_library?
-    assert_not build_user(:architect).can_manage_library?
+  test "only the admin manages the library, users and projects" do
+    admin = build_user(:admin)
+    assert admin.can_manage_library?
+    assert admin.can_manage_users?
+    assert admin.can_create_project?
+    assert_not admin.can_test?
+
+    assert_not build_user(:security_tester).can_manage_library?
+    assert_not build_user(:architect).can_create_project?
   end
 
   test "an unknown role is invalid" do

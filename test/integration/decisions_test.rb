@@ -34,13 +34,13 @@ class DecisionsTest < ActionDispatch::IntegrationTest
     assert @project.reload.design_review?
   end
 
-  test "only a department head can record an override" do
+  test "only a tester can record an override" do
     @result.update!(status: :failed)
-    sign_in_as user(:security_tester)
+    sign_in_as user(:admin)
     post assessment_override_url(@assessment), params: { override: { comments: "Patch next week" } }
     assert_nil @assessment.reload.override
 
-    sign_in_as user(:department_head)
+    sign_in_as user(:security_tester)
     post assessment_override_url(@assessment), params: { override: { comments: "Patch next week" } }
     assert_equal "Patch next week", @assessment.reload.override.comments
   end

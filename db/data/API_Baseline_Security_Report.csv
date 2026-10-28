@@ -1,0 +1,72 @@
+API CONTROLS — LOOP APIs,,,,,,,
+OWASP API Top 10 (2023) | NIST SP 800-204 | CWE/SANS Top 25 | PCI-DSS v4.0 | ISO/IEC 27001:2022,,,,,,,
+STATUS:  Passed = compliant  |  Failed = remediation required  |  Partial = partially met  |  Pending = not yet tested  |  N/A = not applicable,,,,,,,
+#,Control / Test Description,OWASP / Ref,CWE / NIST,Status,Severity,Comments / Findings,Owner
+  1.0  AUTHENTICATION,,,,,,,
+1.1,Ensure every API request is authenticated — no anonymous access to protected endpoints.,API2:2023,CWE-306,Failed,High,Core APIs,OMarion
+1.2,"Enforce strong authentication: Basic Auth only over HTTPS, OAuth 2.0, or JWT. Confirm correct implementation of each.",API2:2023,CWE-287,Failed,Critical,Core APIs,OMarion
+1.3,"Implement MFA where risk warrants it (e.g., certificate-based second factor, TOTP, FIDO2/WebAuthn).",API2:2023,NIST SP 800-63B,Passed,High,Core APIs,OMarion
+1.4,"Anti-brute-force controls on auth endpoints: account lockout, progressive delays, CAPTCHA, rate-limiting.",API4:2023,CWE-307,Failed,High,Core APIs,OMarion
+1.5,Passwords must be salted and hashed with bcrypt/scrypt/Argon2 (min cost factor 10). No MD5/SHA-1.,API2:2023,CWE-916,N/A,Critical,Core APIs,OMarion
+1.6,"JWT: use complex secret (≥256-bit), enforce algorithm server-side (HS256/RS256 — no 'alg:none'), set short TTL, never store sensitive data in payload.",API2:2023,CWE-347,Failed,Critical,Core APIs,OMarion
+1.7,OAuth 2.0: validate redirect_uri server-side (whitelist only); use PKCE for public clients; use 'code' flow not implicit; enforce state param against CSRF; scope validation per client.,API2:2023,CWE-601,Failed,High,Core APIs,OMarion
+1.8,"No credentials, auth tokens, or passwords in URL query strings or HTTP GET parameters.",API2:2023,CWE-598,Passed,High,Core APIs,OMarion
+1.9,"API Keys: enforce rotation policy, never embed in client-side code, transmit only via headers (X-API-Key), associate to IP/service allowlist.",API2:2023,CWE-321,N/A,High,Core APIs,OMarion
+1.1,Session tokens must be invalidated server-side on logout and expiry.,API2:2023,CWE-613,N/A,High,Core APIs,OMarion
+  2.0  AUTHORIZATION  (BOLA / BFLA / Privilege Escalation),,,,,,,OMarion
+2.1,Implement role-based or attribute-based access control (RBAC/ABAC); enforce user hierarchy on every endpoint.,API1:2023,CWE-285,N/A,Critical,Core APIs,OMarion
+2.2,Broken Object-Level Authorization (BOLA/IDOR): verify logged-in user can only access their own records.,API1:2023,CWE-639,N/A,Critical,Core APIs,OMarion
+2.3,Use non-guessable identifiers (UUID v4) for all resource IDs - no sequential integers.,API1:2023,CWE-330,Failed,Medium,Core APIs,OMarion
+2.4,Enforce correct HTTP verbs; reject mis-matched method/resource combinations (405 Method Not Allowed).,API3:2023,CWE-749,Failed,Medium,Core APIs,OMarion
+2.5,Broken Function-Level Authorization (BFLA): admin-only functions must not be reachable by standard users.,API5:2023,CWE-285,N/A,Critical,Core APIs,OMarion
+2.6,"Mass Assignment: API must not accept and apply unintended fields (e.g., 'role','isAdmin') from client payload.",API6:2023,CWE-915,N/A,High,Core APIs,OMarion
+2.7,Ensure cross-tenant isolation in multi-tenant environments — no data bleed between tenants.,API1:2023,CWE-284,N/A,Critical,Core APIs,OMarion
+  3.0  DATA EXPOSURE & EXCESSIVE DATA,,,,,,,OMarion
+3.1,API responses must return only fields needed by the consumer — no over-fetching of sensitive fields.,API3:2023,CWE-200,Failed,High,Core APIs,OMarion
+3.2,"Tokens, bearer tokens, PINs, and passwords must never appear in logs in plaintext.",API3:2023,CWE-532,N/A,Critical,Core APIs,OMarion
+3.3,Disable verbose/stack-trace error messages in production; return generic error with correlation ID only.,API3:2023,CWE-209,Failed,High,Core APIs,OMarion
+3.4,"Sensitive parameters (passwords, PINs, card numbers) encrypted in transit AND at rest.",API3:2023,CWE-311,Passed,Critical,Core APIs,OMarion
+3.5,All API endpoints served exclusively over HTTPS (no HTTP fallback); HSTS header enforced.,API3:2023,CWE-319,Passed,High,Core APIs,OMarion
+3.6,"TLS 1.2 minimum (TLS 1.3 preferred); disable SSLv3, TLS 1.0, TLS 1.1; only strong cipher suites.",API3:2023,CWE-326,Passed,High,Core APIs,OMarion
+3.7,"No sensitive data in HTTP headers sent to client (e.g., internal IPs, debug headers, session tokens in Location).",API3:2023,CWE-200,Passed,Medium,Core APIs,OMarion
+3.8,"PII masking: partial masking applied to card numbers, national IDs, and account numbers in API responses.",API3:2023,CWE-359,N/A,High,Core APIs,OMarion
+  4.0  RESOURCE & RATE LIMITING  ,,,,,,,OMarion
+4.1,Implement rate limiting per client/IP/token; return 429 Too Many Requests with Retry-After header.,API4:2023,CWE-770,Failed,High,Core APIs,OMarion
+4.2,"Enforce max payload size on all input fields (string length, array element count, file size).",API4:2023,CWE-770,Failed,High,Core APIs,OMarion
+4.3,Implement query complexity/depth limits for GraphQL or nested REST resources.,API4:2023,CWE-400,Passed,High,Core APIs,OMarion
+4.4,"Protect file upload endpoints: validate MIME type, enforce max file size, scan for malware.",API4:2023,CWE-434,N/A,Critical,Core APIs,OMarion
+4.5,"Apply geo/IP-based throttling or blocking on high-risk endpoints (e.g., OTP, login, payment).",API4:2023,NIST 800-204,N/A,Medium,Core APIs,OMarion
+  5.0  SECURE CONFIGURATION  ,,,,,,,OMarion
+5.1,Send X-Content-Type-Options: nosniff on all responses.,API8:2023,CWE-16,Passed,Low,Core APIs,OMarion
+5.2,Send X-Frame-Options: DENY (or CSP frame-ancestors 'none') to prevent clickjacking.,API8:2023,CWE-1021,Passed,Low,Core APIs,OMarion
+5.3,Content-Security-Policy: default-src 'none' — restrict resource loading.,API8:2023,CWE-16,Passed,Medium,Core APIs,OMarion
+5.4,"Remove server fingerprinting headers (X-Powered-By, Server, X-AspNet-Version, X-Generator).",API8:2023,CWE-200,Passed,Low,Core APIs,OMarion
+5.5,"Enforce response Content-Type strictly matching actual content (e.g., application/json).",API8:2023,CWE-16,Passed,Low,Core APIs,OMarion
+5.6,"Never return credentials, passwords, or security tokens in response bodies.",API8:2023,CWE-200,Passed,High,Core APIs,OMarion
+5.7,"Return correct HTTP status codes for every operation type (200, 201, 400, 401, 403, 404, 405, 429, 500).",API8:2023,CWE-284,Passed,Medium,Core APIs,OMarion
+5.8,CORS policy: restrict Access-Control-Allow-Origin to known domains; no wildcard (*) on credentialed requests.,API8:2023,CWE-942,Failed,High,Core APIs,OMarion
+5.9,"Disable debug mode, admin consoles (Swagger UI, GraphiQL), and test endpoints in production.",API8:2023,CWE-94,Passed,High,Core APIs,OMarion
+5.1,API versioning enforced; deprecated versions return 410 Gone after sunset date.,API9:2023,CWE-16,Passed,Medium,Core APIs,OMarion
+  6.0  INPUT VALIDATION & INJECTION PREVENTION,,,,,,,OMarion
+6.1,"All input validation via single, centralised, actively maintained library (no ad-hoc validation).",API3:2023,CWE-20,N/A,High,Core APIs,OMarion
+6.2,"Validate, filter, and sanitise all client-supplied and third-party integration data.",API3:2023,CWE-20,Passed,Critical,Core APIs,OMarion
+6.3,"Escape special characters using context-appropriate encoding for target interpreter (HTML, SQL, LDAP, OS).",API3:2023,CWE-116,Passed,High,Core APIs,OMarion
+6.4,Use parameterised queries / ORM — never concatenate user input into SQL/NoSQL queries.,API3:2023,CWE-89,Passed,Critical,Core APIs,OMarion
+6.5,Limit records returned per query to prevent mass data disclosure via injection.,API3:2023,CWE-89,Passed,High,Core APIs,OMarion
+6.6,Accept-list validation: only allow explicitly permitted values per input parameter.,API3:2023,CWE-20,Passed,Medium,Core APIs,OMarion
+6.7,Define strict data types and regex patterns for all string parameters (format enforcement).,API3:2023,CWE-20,Passed,Medium,Core APIs,OMarion
+6.8,XML/JSON bomb and XXE prevention: reject deeply nested structures; disable external entity processing.,API3:2023,CWE-611,Passed,Critical,Core APIs,OMarion
+6.9,Server-Side Request Forgery (SSRF) prevention: validate and allowlist URL inputs; block internal IP ranges.,API7:2023,CWE-918,Failed,Critical,Core APIs,OMarion
+6.1,"Command/LDAP/XPath injection: sanitise all fields used in system calls, directory queries, XML path expressions.",API3:2023,CWE-77,N/A,Critical,Core APIs,OMarion
+  7.0  AUDITING & LOGGING  ,,,,,,,OMarion
+7.1,"Log all failed authentication attempts, access denials, input validation errors, and rate-limit triggers.",API10:2023,CWE-778,Failed,High,Core APIs,OMarion
+7.2,Log all inbound requests and outbound responses (excluding sensitive payloads).,API10:2023,CWE-778,Failed,High,Core APIs,OMarion
+7.3,Logs formatted in structured JSON consumable by SIEM (Kibana).,API10:2023,NIST 800-92,Failed,Medium,Core APIs,OMarion
+7.4,Log contains actual client source IP (not load-balancer IP); use X-Forwarded-For with validation.,API10:2023,CWE-778,Failed,Medium,Core APIs,OMarion
+7.5,Raw HTTP access logs AND transactional logs shipped to centralised log aggregation platform.,API10:2023,NIST 800-92,Failed,Medium,Core APIs,OMarion
+7.6,"Immutable audit trail for all financial/payment transactions: record who, what, when, from where.",API10:2023,PCI-DSS 10.2,Failed,Critical,Core APIs,OMarion
+7.7,Log retention policy enforced: As per NCBA Policy,API10:2023,PCI-DSS 10.7,Failed,High,Core APIs,OMarion
+7.8,"Alerting rules configured for anomalous patterns: spike in 401/403 responses, unusual transaction volume, after-hours admin access.",API10:2023,NIST 800-137,Failed,High,Core APIs,OMarion
+"  9.0  API INVENTORY, VERSIONING & CHANGE MANAGEMENT ",,,,,,,OMarion
+9.1,"Maintain a complete, up-to-date API inventory (OpenAPI/Swagger spec) for all internal and external APIs.",API9:2023,NIST 800-204,Passed,High,Core APIs,OMarion
+9.2,Deprecated API endpoints return 410 Gone; no legacy endpoints process live transactions.,API9:2023,CWE-1188,N/A,High,Core APIs,OMarion
