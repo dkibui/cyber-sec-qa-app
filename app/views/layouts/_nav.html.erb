@@ -1,16 +1,9 @@
 <% if authenticated? %>
   <nav class="topbar">
     <%= link_to image_tag("loop_logo.svg", alt: "LOOP", class: "logo"), root_path, class: "brand-link" %>
-    <% if authenticated? %>
-      <nav class="topbar">
-        <%= link_to "Projects", root_path %>
-        <%= link_to "Control library", domains_path %>
-        <span class="spacer"></span>
-        <span><%= Current.user.email_address %> (<%= Current.user.role.humanize %>)</span>
-        <%= button_to "Sign out", session_path, method: :delete, class: "link" %>
-      </nav>
-    <% end %>
+    <%= link_to "Projects", root_path %>
     <%= link_to "Control library", domains_path %>
+    <% if Current.user.can_manage_users? %><%= link_to "Users", users_path %><% end %>
     <span class="spacer"></span>
     <span><%= Current.user.email_address %> (<%= Current.user.role.humanize %>)</span>
     <%= button_to "Sign out", session_path, method: :delete, class: "link" %>
