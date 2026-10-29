@@ -1,8 +1,7 @@
 <h1>Import controls from CSV</h1>
 <p class="muted">You will see a preview first. Nothing is saved until you confirm. Existing domains and controls are never changed or deleted, and anything already in the library is skipped.</p>
 
-<%= form_with url: preview_control_import_path, multipart: true do |f| %>
-  <p>
+<%= form_with url: preview_control_import_path, multipart: true, data: { turbo: false } do |f| %>  <p>
     <%= f.label :file, "Baseline CSV file" %><br>
     <%= f.file_field :file, accept: ".csv,text/csv", required: true %>
   </p>
