@@ -1,0 +1,23 @@
+<%= form_with model: user do |f| %>
+  <% if user.errors.any? %>
+    <ul class="flash alert">
+      <% user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <p>
+    <%= f.label :email_address, "Email" %><br>
+    <%= f.email_field :email_address, required: true %>
+  </p>
+  <p>
+    <%= f.label :role %><br>
+    <%= f.select :role, User.roles.keys.map { |r| [r.humanize, r] } %>
+  </p>
+  <p>
+    <%= f.label :password, user.new_record? ? "Password" : "New password (leave blank to keep the current one)" %><br>
+    <%= f.password_field :password, required: user.new_record?, autocomplete: "new-password" %>
+  </p>
+  <p><%= f.submit class: "button" %></p>
+<% end %>
