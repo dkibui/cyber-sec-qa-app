@@ -1,7 +1,11 @@
 <h1>Control library</h1>
 <p class="muted">Numbers are permanent. Retired controls are hidden from new assessments and their numbers are never reused.</p>
-<% if Current.user.can_manage_library? %><p><%= link_to "Add domain", new_domain_path, class: "button" %></p><% end %>
-
+<% if Current.user.can_manage_library? %>
+  <p>
+    <%= link_to "Add domain", new_domain_path, class: "button" %>
+    <%= link_to "Import controls from CSV", new_control_import_path, class: "button" %>
+  </p>
+<% end %>
 <% @domains.each do |domain| %>
   <h2><%= domain.number %>. <%= domain.name %></h2>
   <table>

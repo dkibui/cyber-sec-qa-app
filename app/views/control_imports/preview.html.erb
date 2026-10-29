@@ -1,0 +1,66 @@
+<h1>Import preview</h1>
+
+<% if @plan.errors.any? %>
+  <ul class="flash alert">
+    <% @plan.errors.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+  </ul>
+  <p><%= link_to "Try another file", new_control_import_path %></p>
+<% else %>
+  <p>
+    <strong><%= @plan.new_controls %></strong> new controls in
+    <strong><%= @plan.new_domains %></strong> new domains.
+    <strong><%= @plan.existing_controls %></strong> are already in the library and will be skipped.
+  </p>
+
+  <% if @plan.warnings.any? %>
+    <h2>Things to check</h2>
+    <ul>
+      <% @plan.warnings.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <% if @plan.importable? %>
+    <%= form_with url: confirm_control_import_path do %>
+      <%= hidden_field_tag :csv, @csv %>
+      <p>
+        <%= submit_tag "Import #{@plan.new_controls} controls", class: "button" %>
+        <%= link_to "Cancel", new_control_import_path %>
+      </p>
+    <% end %>
+  <% else %>
+    <p class="muted">Nothing new to import.</p>
+    <p><%= link_to "Back to the control library", domains_path %></p>
+  <% end %>
+
+  <% @plan.sections.each do |section| %>
+    <h2><%= section.number %>. <%= section.name %><%= " (new domain)" if section.domain.nil? %></h2>
+    <table>
+      <thead>
+      <tr>
+        <th>Ref</th>
+        <th>Control</th>
+        <th>OWASP</th>
+        <th>CWE / NIST</th>
+        <th>Severity</th>
+        <th>Result</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% section.entries.each do |entry| %>
+        <tr>
+          <td><%= entry.ref %></td>
+          <td><%= entry.description %></td>
+          <td><%= entry.owasp %></td>
+          <td><%= entry.cwe_nist %></td>
+          <td><%= entry.severity.humanize %></td>
+          <td><%= entry.existing ? "Already in library" : "New" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  <% end %>
+<% end %>

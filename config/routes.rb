@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   resources :projects, only: %i[index show new create] do
     post :submit, on: :member
   end
+  resources :users, only: %i[index new create edit update]
   resources :assessments, only: :show do
     resource :decision, only: :create
     resource :override, only: %i[new create]
@@ -25,6 +26,11 @@ Rails.application.routes.draw do
     resources :evidences, only: %i[create destroy]
   end
   resources :control_results, only: :update
+
+  resource :control_import, only: :new do
+    post :preview
+    post :confirm
+  end
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
